@@ -1,0 +1,40 @@
+<?php
+/**
+ * 557 统一格式输出.
+ * @author WiconWang <WiconWang@gmail.com>
+ * @copyright  2018/10/19 1:46 PM
+ */
+
+namespace App\Utilities;
+
+use App\Config\ReturnCode;
+
+
+trait ResponseHelper
+{
+
+    /**
+     * 标准 JSON 输出
+     *
+     * @param $bool
+     */
+    public function responseDefaultJson($bool)
+    {
+        $ReturnCode = $bool ? ReturnCode::SUCCESS : ReturnCode::ERROR;
+        $this->writeJson($ReturnCode,[], ReturnCode::getMessage($ReturnCode));
+    }
+
+
+    /**
+     * 标准 JSON 输出
+     *
+     * @param $ReturnCode
+     * @param string $msg
+     * @param array $data
+     * @return bool
+     */
+    public function responseJson($ReturnCode, $msg = '', $data = [])
+    {
+        $this->writeJson($ReturnCode,$data, empty($msg) ? ReturnCode::getMessage($ReturnCode) : $msg);
+    }
+}

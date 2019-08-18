@@ -1,0 +1,71 @@
+<?php
+/**
+ * 557 easy.
+ * @author WiconWang <WiconWang@gmail.com>
+ * @copyright  2019/8/15 1:36 PM
+ *
+ * DOCS: https://github.com/nikic/FastRoute/
+ */
+
+namespace App\HttpController;
+
+use App\Config\ReturnCode;
+use EasySwoole\Http\AbstractInterface\AbstractRouter;
+use FastRoute\RouteCollector;
+
+
+class Router extends AbstractRouter
+{
+
+    function initialize(RouteCollector $r)
+    {
+        // 是否启用默认路由
+        $this->setGlobalMode(false);
+
+        // 拦截无方法时异常
+        // 可使用 Request $request,Response $response
+        $this->setMethodNotAllowCallBack(function () {
+            throw new \RuntimeException('未找到处理方法', ReturnCode::NOT_FOUND);
+        });
+
+        // 拦截无路由时异常
+        // 可使用 Request $request,Response $response
+        $this->setRouterNotFoundCallBack(function () {
+            throw new \RuntimeException('未找到路由匹配', ReturnCode::NOT_FOUND);
+        });
+
+        $r->addGroup('/admin/v1', function (RouteCollector $r) {
+            $r->post('/login', '/Admin/Login/checkLogin');
+
+            $r->addGroup('/admins', function (RouteCollector $r) {
+                $r->get('/info', '/Admin/Admin/getAll');
+                $r->get('/info/{id:\d+}', '/Admin/Admin/getOne');
+                $r->post('/info', '/Admin/Admin/add');
+                $r->put('/info/{id:\d+}', '/Admin/Admin/update');
+                $r->delete('/info/{id:\d+}', '/Admin/Admin/delete');
+            });
+
+            $r->addGroup('/members', function (RouteCollector $r) {
+                $r->get('/info', '/Admin/Member/getAll');
+                $r->get('/info/{id:\d+}', '/Admin/Member/getOne');
+                $r->post('/info', '/Admin/Member/add');
+                $r->put('/info/{id:\d+}', '/Admin/Member/update');
+                $r->delete('/info/{id:\d+}', '/Admin/Member/delete');
+            });
+
+        });
+
+
+        $r->addGroup('/user/v1', function (RouteCollector $r) {
+            $r->post('/getSMS', '/User/Login/getSMS');
+            $r->post('/login', '/User/Login/checkLogin');
+
+
+        });
+
+
+// 下一行标记会在命令生成时使用，请不要删除
+// ROUTEAREA
+
+    }
+}

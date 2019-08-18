@@ -1,0 +1,201 @@
+<?php
+
+namespace App\Config;
+
+class ReturnCode
+{
+    public const SUCCESS = 0;                             //	正确返回
+
+    // HTTP 类返回码
+    public const ERROR = 1000;                             // 通用错误
+    public const TOKEN_LOST = 1001;                           // API签名缺失
+    public const TOKEN_ERROR = 1002;                           // API签名校验错误
+    public const FORBIDDEN = 1003;                            // 拒绝调用相关接口
+    public const NOT_FOUND = 1004;                           // 未找到相应API
+    public const METHOD_NOT_ALLOWED = 1005;                                   // API调用方法错误
+    public const REQUEST_TIMEOUT = 1008;                               // API响应超时
+    public const CONFLICT = 1009;                           // 请求冲突
+    public const GONE = 1010;                        // 资源删除导致此请求已不再可用
+    public const URI_TOO_LONG = 1014;                               // URI过长，无法响应
+    public const LOCKED = 1023;                           // 资源被锁定，暂无法处理
+    public const FAILED_DEPENDENCY = 1024;                                   // 此请求的前置条件未达成，导致无法响应
+    public const UPGRADE_REQUIRED = 1026;                                   // 此接口已放弃使用，需要升级
+    public const TOO_MANY_REQUESTS = 1029;                                    // 请求过于频繁
+
+    // 资源故障类返回码
+    public const SERVER_ERROR = 1100;                                  //	服务器出现错误
+    public const SERVER_BUSY = 1101;                         //	服务器繁忙无法处理
+    public const DATABASE_ERROR = 1110;                             //	数据库未知错误
+    public const DATABASE_CONNECT_ERROR = 1111;                                     //	数据库连接故障
+    public const DATABASE_SQL_ERROR = 1112;                                 //	数据库SQL语句错误
+    public const CACHE_ERROR = 1120;                         //	缓存服务器未知错误
+    public const CACHE_CONNECT_ERROR = 1121;                                 //	缓存服务器连接故障
+    public const FILE_ERROR = 1130;                         //	文件系统未知错误
+    public const FILE_OPEN_FAIL = 1131;                             //	文件无法打开
+    public const FILE_SAVE_FAIL = 1132;                             //	文件无法写入
+
+    // 参数类返回码
+    public const PARAM_PARSE_FAIL = 1200;                                     //	参数无法解析
+    public const PARAM_ERROR = 1201;                        //	参数错误
+    public const PARAM_LACK = 1202;                        //	必选参数缺少
+    public const PARAM_TOO_LONG = 1203;                            //	必选参数太长
+
+    // 表单类返回码
+    public const FORM_ERROR = 1300;                              //	通用
+    public const FORM_PARAM_ERROR = 1301;                                 //	提交参数错误
+    public const FORM_CONTENT_INVALID = 1302;                                     //	提交包含非法内容
+    public const FORM_LACK = 1303;                         //	提交参数缺少
+    public const FORM_FORMAT_ERROR = 1304;                                 //	传入的文件格式不正确
+    public const FORM_TOO_LONG = 1305;                             //	传入内容过长
+    public const FORM_EXISTED = 1306;                             //	提交相同的信息，或者记录已经存在
+    public const FORM_UNABLE_RESUBMIT = 1307;                                  // 无法多次提交
+
+    // 数据库记录类
+    public const RECORD_NOT_FOUND = 1400;                                      //	未能检索到记录
+    public const RECORD_INSERT_ERROR = 1401;                                 //	记录增加失败
+    public const RECORD_UPDATE_ERROR = 1402;                                 //	记录修改失败
+    public const RECORD_DELETE_ERROR = 1403;                                 //	记录删除失败
+    public const RECORD_REPETITION_ERROR = 1404;                                  // 记录重复
+    public const RECORD_INFO_INVARIABLE = 1405;                                  // 信息未改变（与之前一样）
+
+    // 功能模块：
+    //用户
+    public const USER_NOT_EXIST = 2001;                             //	 用户不存在
+    public const USER_PASSWORD_ERROR = 2002;                            //    用户密码错误
+    public const USER_DISABLED = 2003;                        //	 用户被禁用
+    public const USER_FORBIDDEN = 2004;                        //	 用户没有访问权限
+    public const USER_IS_EXIST = 2005;                       //	 用户已存在
+    public const USER_MOBILE_IS_EXIST = 2006;                               //	 用户已存在
+    public const USER_NAME_IS_EXIST = 2007;                           //	 用户已存在
+    public const USER_MOBILE_CODE_ERROR = 2008;                     // 用户手机验证码错误
+    public const USER_NO_PASSWORD = 2009;                         // 用户未设置密码
+    public const USER_PASSWORD_LENGTH_ERROR = 2015;                                 //用户密码长度未到标准
+    public const USER_EMAIL_EXIST = 2016;                         // 邮箱已被占用
+    public const USER_MOBILE_EXIST = 2017;                         // 手机号码已被占用
+    public const USER_INFO_INVARIABLE = 2018;                             // 信息未改变（与之前一样）
+    public const USER_EMAIL_IN_SAME = 2020;                         // 用户输入的邮箱与旧邮箱相同
+    public const USER_PASSWORD_NOT_SAME = 2021;                             // 用户输入的密码不一致
+    public const USER_CERTIFICATEING = 2022;                         // 用户输入的密码不一致
+
+
+    //订单
+    public const ORDER_DISABLED = 2100;                                 //	订单状态已不允许支付
+    public const ORDER_PAYMENT_ERROR = 2110;                                //	无法更新支付方式
+    public const ORDER_PAYMENT_LOST = 2111;                                // 支付方式不存在
+    public const ORDER_REFUND_DISABLED = 2130;                                    // 不符合退款条件
+    public const ORDER_DELIVER_NOT_FOUND = 2140;                                    // 暂时无此订单的物流信息
+    public const ORDER_TAKE_FAIL = 2150;                            // 暂时无此订单的物流信息
+
+    // 评论
+    public const COMMENT_DEL_FAIL = 2200;                                      // 删除评论
+    public const REPLAY_DEL_FAIL = 2201;                                  // 删除回复
+
+
+
+    ////////
+    protected const MESSAGE = [
+        0    => "成功",
+        //HTTP 类返回码
+        1000 => "请求出现错误",
+        1001 => "用户签名已失效，请重新登陆",
+        1002 => "用户签名校验错误",
+        1003 => "拒绝调用相关接口",
+        1004 => "未找到相应API",
+        1005 => "API请求方法错误",
+        1008 => "API响应超时",
+        1009 => "请求冲突",
+        1010 => "资源删除导致此请求已不再可用",
+        1014 => "URI过长，无法响应",
+        1023 => "资源被锁定，暂无法处理",
+        1024 => "此请求的前置条件未达成，导致无法响应",
+        1026 => "此接口已放弃使用，需要升级",
+        1029 => "请求过于频繁",
+
+        //资源故障类返回码
+        1100 => "服务器出现错误",
+        1101 => "服务器繁忙无法处理",
+        1110 => "数据库未知错误",
+        1111 => "数据库连接故障",
+        1112 => "数据库SQL语句错误",
+        1120 => "缓存服务器未知错误",
+        1121 => "缓存服务器连接故障",
+        1130 => "文件系统未知错误",
+        1131 => "文件无法打开",
+        1132 => "文件无法写入",
+
+        //参数类返回码
+        1200 => "请求参数无法解析",
+        1201 => "请求参数错误",
+        1202 => "请求的参数缺失或格式错误",
+        1203 => "请求参数内容过长",
+
+        //表单类返回码
+        1300 => "通用",
+        1301 => "提交参数错误",
+        1302 => "提交包含非法内容",
+        1303 => "提交参数缺少",
+        1304 => "传入的文件格式不正确",
+        1305 => "传入内容过长",
+        1306 => "提交相同的信息，或者记录已经存在",
+        1307 => "已提交内容，无法多次修改",
+
+        //数据库记录类
+        1400 => "未能检索到记录",
+        1401 => "记录增加失败",
+        1402 => "记录修改失败",
+        1403 => "记录删除失败",
+        1404 => "记录已存在",
+        1405 => "记录未改变",
+
+        //功能模块：
+        //用户
+        2001 => "用户不存在",
+        2002 => "用户密码错误",
+        2003 => "用户被禁用",
+        2004 => "用户没有访问权限",
+        2005 => "此用户已经存在",
+        2006 => "此手机号用户已经存在",
+        2007 => "此用户名已经存在",
+        2008 => "用户手机验证码错误",
+        2009 => "此用户未设置密码",
+        2015 => "用户密码长度有误",
+        2016 => "该邮箱已被占用",
+        2017 => "该手机号已被占用",
+        2018 => "用户信息未改变",
+        2020 => "用户输入的邮箱与旧邮箱相同",
+        2021 => "用户输入的密码不一致",
+        2022 => "用户认证过程中，请稍候再试",
+
+
+        //订单
+        2100 => "订单状态已不允许支付",
+        2110 => "无法更新支付方式",
+        2111 => "支付方式不存在",
+        2130 => "不符合退款条件",
+        2140 => "暂时无此订单的物流信息",
+        2150 => "暂时无此订单的物流信息",
+
+        //评论
+        2200 => "删除评论",
+        2201 => "删除回复",
+
+    ];
+
+    public static function getMessage($code)
+    {
+        return self::MESSAGE[$code];
+    }
+
+    public static function getStatus($code)
+    {
+        if ($code == 1001) return 401;
+        if ($code == 1003) return 403;
+        if ($code == 1004) return 404;
+        if ($code == 1005) return 405;
+        if ($code == 1008) return 408;
+        if ($code == 1101) return 503;
+        if ($code >= 1100 && $code < 1200) return 500;
+        return 500;
+    }
+
+}

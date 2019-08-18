@@ -6,7 +6,10 @@
   "require": {
     "php": ">=7.1.0",
     "tioncico/curd-automatic-generation": "^1.0",
-    "symfony/console": "4.4.x-dev"
+    "symfony/console": "4.4.x-dev",
+    "easyswoole/mysqli-pool": "^1.0",
+    "nikic/fast-route": "^1.3",
+    "easyswoole/redis-pool": "^1.0"
   },
   "authors": [
     {
