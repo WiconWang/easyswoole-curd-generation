@@ -26,10 +26,8 @@
     执行以下命令：
     ```
     composer require wiconwang/easyswoole-generation
+    php vendor/bin/cmd install
     ```
-
-3. 移出命令文件    
-    安装成功后，请到 `vendor/wiconwang/easyswoole-generation` 下，将 `cmd` 文件复制到项目根目录以便后期使用。
 
 
 ## 使用说明
