@@ -1,0 +1,23 @@
+{
+  "name": "wiconwang/easyswoole-generation",
+  "type": "l",
+  "license": "MIT",
+  "description": "An efficient swoole CURD generation",
+  "require": {
+    "php": ">=7.1.0",
+    "tioncico/curd-automatic-generation": "^1.0",
+    "symfony/console": "4.4.x-dev"
+  },
+  "authors": [
+    {
+      "name": "Wicon Wang",
+      "email": "wiconwang@gmail.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "autoload": {
+    "psr-4": {
+      "ESGeneration\\": "src/"
+    }
+  }
+}
