@@ -52,10 +52,10 @@ class InitDbCommand extends Command
         }
 
         $beanConfig->createMysql();
-        $output->writeln('数据库模块 生成成功！');
+        $output->writeln('数据库模块 生成成功！请到 dev.php 和 produce.php 中配置连接');
 
         $beanConfig->createRedis();
-        $output->writeln('缓存模块 生成成功！');
+        $output->writeln('缓存模块 生成成功！请到 dev.php 和 produce.php 中配置连接');
 
 
         $beanConfig->createJson();

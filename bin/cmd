@@ -7,8 +7,27 @@
  * @copyright  2019/8/17 下午10:23
  */
 
+if ($argv[1] == 'install') {
+    $filePath = './cmd';
 
-require __DIR__.'/vendor/autoload.php';
+    if (file_exists($filePath)) {
+        echo "已经存在命令文件,是否覆盖?(y/n)\n";
+        if (trim(fgets(STDIN)) == 'n') {
+            echo "- 已跳过\n";
+            return false;
+        }
+    }
+$content = '#!/usr/bin/env php
+<?php
+
+/**
+ * 557 EasySwoole 命令行生成工具
+ * @author WiconWang <WiconWang@gmail.com>
+ * @copyright  2019/8/17 下午10:23
+ */
+
+
+require __DIR__.\'/vendor/autoload.php\';
 
 use Symfony\Component\Console\Application;
 new ESGeneration\Builder();
@@ -28,3 +47,16 @@ $application->add(new ESGeneration\Cmd\Databases\TableAlterCommand());
 
 
 $application->run();
+' ;
+
+    $cmdFile = fopen($filePath, "w") or die("Unable to open file!");
+    fwrite($cmdFile, $content);
+    fclose($cmdFile);
+
+    echo "生成命令文件，请执行 php cmd 查询可用命令\n";
+    echo "若为空白项目，推荐优先执行：php cmd init:framework 和 php cmd init:database\n";
+
+}
+
+
+

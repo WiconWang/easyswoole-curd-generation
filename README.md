@@ -21,6 +21,11 @@
 2. 安装主程序  
     目前本项目仅发布 dev 版，请在 composer.json 中，添加以下代码，以便可以使用本项目
     ```
+    "autoload": {
+        "psr-4": {
+            "App\\": "App/"
+        }
+    },
     "minimum-stability": "dev",
     ```  
     执行以下命令：
@@ -28,7 +33,16 @@
     composer require wiconwang/easyswoole-generation
     php vendor/bin/cmd install
     ```
+执行后，会在根目录生成 `cmd` 文件    
+如未成功生成，请到 `vendor/wiconwang/easyswoole-generation` 下，将 `cmd` 文件复制到项目根目录以便后期使用。
+
 
 
 ## 使用说明
-请在项目根目录下执行 `php cmd` 查看具体命令
+请在项目根目录下执行 `php cmd` 查看具体命令。
+空白项目，推荐执行顺序：
+``` 
+php cmd init:framework
+php cmd init:database
+
+```
