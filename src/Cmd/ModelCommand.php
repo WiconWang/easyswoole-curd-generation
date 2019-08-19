@@ -1,10 +1,12 @@
 <?php
+
 namespace ESGeneration\Cmd;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
+use ESGeneration\Builder\Project\Curd;
 
 class ModelCommand extends Command
 {
@@ -16,24 +18,25 @@ class ModelCommand extends Command
             // 运行 "php console_command list" 时的简短描述
             ->setDescription('Create new model')
             // 运行命令时使用 "--help" 选项时的完整命令描述
-            ->setHelp('This command allow you to create models...')
+            ->setHelp('根据数据库表，生成常用Model操作....')
             // 配置一个参数
-            ->addArgument('name', InputArgument::REQUIRED, 'what\'s model you want to create ?')
+            ->addArgument('table_name', InputArgument::REQUIRED, '请输入表名！')
             // 配置一个可选参数
-            ->addArgument('optional_argument', InputArgument::OPTIONAL, 'this is a optional argument');
+            ->addArgument('path', InputArgument::OPTIONAL, '请输入命名空间');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        // 你想要做的任何操作
-        $optional_argument = $input->getArgument('optional_argument');
 
-        $output->writeln('creating...');
-        $output->writeln('created ' . $input->getArgument('name') . ' model success !');
-
-        if ($optional_argument)
-            $output->writeln('optional argument is ' . $optional_argument);
-
-        $output->writeln('the end.');
+        $tableName = $input->getArgument('table_name');
+        $path = $optional_argument ?? '';
+        $beanConfig = new Curd();
+        try {
+            $beanConfig->makeModel($tableName, $path);
+        } catch (Exception $e) {
+            echo $e->getMessage();
+            // die(); // 终止异常
+        }
+        exit;
     }
 }
