@@ -34,35 +34,8 @@ class Router extends AbstractRouter
             throw new \RuntimeException('未找到路由匹配', ReturnCode::NOT_FOUND);
         });
 
-        $r->addGroup('/admin/v1', function (RouteCollector $r) {
-            $r->post('/login', '/Admin/Login/checkLogin');
-
-            $r->addGroup('/admins', function (RouteCollector $r) {
-                $r->get('/info', '/Admin/Admin/getAll');
-                $r->get('/info/{id:\d+}', '/Admin/Admin/getOne');
-                $r->post('/info', '/Admin/Admin/add');
-                $r->put('/info/{id:\d+}', '/Admin/Admin/update');
-                $r->delete('/info/{id:\d+}', '/Admin/Admin/delete');
-            });
-
-            $r->addGroup('/members', function (RouteCollector $r) {
-                $r->get('/info', '/Admin/Member/getAll');
-                $r->get('/info/{id:\d+}', '/Admin/Member/getOne');
-                $r->post('/info', '/Admin/Member/add');
-                $r->put('/info/{id:\d+}', '/Admin/Member/update');
-                $r->delete('/info/{id:\d+}', '/Admin/Member/delete');
-            });
-
-        });
-
-
-        $r->addGroup('/user/v1', function (RouteCollector $r) {
-            $r->post('/getSMS', '/User/Login/getSMS');
-            $r->post('/login', '/User/Login/checkLogin');
-
-
-        });
-
+        // 研发文档
+        $r->get('/Swagger/getJson', '/Swagger/getJson');
 
 // 下一行标记会在命令生成时使用，请不要删除
 // ROUTEAREA

@@ -15,7 +15,7 @@ class ControllerCommand extends Command
             // 命令的名称 （"php console_command" 后面的部分）
             ->setName('make:controller')
             // 运行 "php console_command list" 时的简短描述
-            ->setDescription('Create new Controller')
+            ->setDescription('生成 Controller')
             // 运行命令时使用 "--help" 选项时的完整命令描述
             ->setHelp('根据数据库表，生成常用Controller操作....')
             // 配置一个参数
@@ -30,12 +30,7 @@ class ControllerCommand extends Command
         $tableName = $input->getArgument('table_name');
         $path = $optional_argument ?? '';
         $beanConfig = new Curd();
-        try {
-            $beanConfig->makeController($tableName, $path);
-        } catch (Exception $e) {
-            echo $e->getMessage();
-            // die(); // 终止异常
-        }
-        exit;
+        $beanConfig->makeController($tableName, $path);
+        return true;
     }
 }

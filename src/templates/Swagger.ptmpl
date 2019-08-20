@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * @OA\OpenApi(
+ *     @OA\Info(
+ *         version="1.0.0",
+ *         title="接口文档",
+ *     ),
+
+ *     @OA\Server(
+ *         description="OpenApi host",
+ *         url="http://localhost:9501"
+ *     ),
+ * )
+ */
+
+namespace App\HttpController;
+
+class Swagger extends \EasySwoole\Http\AbstractInterface\Controller
+{
+
+    function getJson()
+    {
+        $swagger = \OpenApi\scan(dirname(__FILE__));
+        $this->response()->write(json_encode($swagger, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+        $this->response()->withHeader('Content-type', 'application/json;charset=utf-8');
+        $this->response()->withStatus('200');
+        return true;
+    }
+
+    function index()
+    {
+        // TODO: Implement index() method.
+    }
+}

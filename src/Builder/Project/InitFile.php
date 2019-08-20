@@ -36,6 +36,15 @@ class InitFile
         return true;
     }
 
+    /**
+     * 接口文档配置
+     * @return bool
+     */
+    public function createApiDoc()
+    {
+        $this->createBaseDirectory('App//HttpController');
+        $this->createPHPDocument('/App/HttpController/Swagger', $this->getPHPDocument('/templates/Swagger'));
+    }
 
     /**
      * 响应码和配置
@@ -191,11 +200,11 @@ class InitFile
             $origin = $origin[0];
             if(in_array($origin, $allow_origin)){
                 $response->withHeader(\'Access-Control-Allow-Origin\', $origin);
-                $response->withHeader(\'Access-Control-Allow-Methods\', \'GET, POST, OPTIONS\');
+                $response->withHeader(\'Access-Control-Allow-Methods\', \'GET, POST, OPTIONS, DELETE, PUT, PATCH\');
                 $response->withHeader(\'Access-Control-Allow-Credentials\', \'true\');
                 $response->withHeader(\'Access-Control-Allow-Headers\', \'Content-Type, Authorization, X-Requested-With, token\');
                 if ($request->getMethod() === \'OPTIONS\') {
-                    $response->withStatus(Status::CODE_OK);
+                    $response->withStatus(\EasySwoole\Http\Message\Status::CODE_OK);
                     return false;
                 }
             }
@@ -205,6 +214,24 @@ class InitFile
         return true;
 
     }
+
+    // Base文件追加内容
+    /**
+     * 全站 JSON 影响
+     * @return bool
+     */
+    public function appendBase()
+    {
+        $content = file_get_contents(ES_ROOT . '/App/HttpController/Base.php');
+        $content = str_replace('public function index()','
+        use \App\Utilities\ResponseHelper;
+        public function index()
+        ',$content);
+
+        file_put_contents(ES_ROOT . '/App/HttpController/Base.php',$content);
+
+    }
+    //
 
 
     // 取内容

@@ -164,12 +164,14 @@ BODY;
         $apiUrl = str_replace(['App\\HttpController', '\\'], ['', '/'], $this->config->getBaseNamespace());
 //        var_dump($this->config->getBaseNamespace(),$apiUrl);die;
         //配置基础注释
-        $method->addComment("@api {get|post} {$apiUrl}/{$this->setRealTableName()}/add");
-        $method->addComment("@apiName add");
-        $method->addComment("@apiGroup {$apiUrl}/{$this->setRealTableName()}");
-        $method->addComment("@apiPermission {$this->config->getAuthName()}");
-        $method->addComment("@apiDescription add新增数据");
-        $this->config->getAuthSessionName() && ($method->addComment("@apiParam {String}  {$this->config->getAuthSessionName()} 权限验证token"));
+
+
+        $method->addComment("@OA\Post(");
+        $method->addComment("path=\"{$apiUrl}/{$this->setRealTableName()}/info\",");
+        $method->addComment("tags={\"{$apiUrl}/{$this->setRealTableName()}\"},");
+        $method->addComment("summary=\"新增数据\",");
+        $method->addComment("description=\"新增数据\",");
+        $this->config->getAuthSessionName() && ($method->addComment("@OA\Parameter(name=\"{$this->config->getAuthSessionName()}\",in=\"header\",description=\"TOKEN\",required=true,@OA\Schema(type=\"string\")),"));
         $mysqlPoolNameArr = (explode('\\', $this->config->getMysqlPoolClass()));
         $mysqlPoolName = end($mysqlPoolNameArr);
         $modelNameArr = (explode('\\', $this->config->getModelClass()));
@@ -192,13 +194,18 @@ Body;
                 $addData[] = $column['Field'];
                 $columnType = $this->convertDbTypeToDocType($column['Type']);
                 $setMethodName = "set" . Str::studly($column['Field']);
+                if ($columnType == 'int') {
+                    $method->addComment("@OA\Parameter(name=\"{$column['Field']}\",in=\"query\",required=false,description=\"{$column['Comment']}\",@OA\Schema(type=\"integer\",format=\"int64\",default=\"0\",minimum=0)),");
+                } else {
+                    $method->addComment("@OA\Parameter(name=\"{$column['Field']}\",in=\"query\",required=false,description=\"{$column['Comment']}\",@OA\Schema(type=\"string\")),");
+                }
+
                 if ($column['Null'] == 'NO') {
-                    $method->addComment("@apiParam {{$columnType}} {$column['Field']} {$column['Comment']}");
                     $methodBody .= "\$bean->$setMethodName(\$param['{$column['Field']}']);\n";
                 } else {
-                    $method->addComment("@apiParam {{$columnType}} [{$column['Field']}] {$column['Comment']}");
                     $methodBody .= "\$bean->$setMethodName(\$param['{$column['Field']}'] ?? '');\n";
                 }
+
             } else {
                 $this->config->setPrimaryKey($column['Field']);
             }
@@ -215,13 +222,15 @@ if (\$rs) {
 }
 Body;
         $method->setBody($methodBody);
-        $method->addComment("@apiSuccess {Number} code");
-        $method->addComment("@apiSuccess {Object[]} data");
-        $method->addComment("@apiSuccess {String} msg");
-        $method->addComment("@apiSuccessExample {json} Success-Response:");
-        $method->addComment("HTTP/1.1 200 OK");
-        $method->addComment("{\"code\":200,\"data\":{},\"msg\":\"success\"}");
+
+        $method->addComment("@OA\Response(");
+        $method->addComment("     response=200,");
+        $method->addComment("     description=\"成功\",");
+        $method->addComment("   )");
+        $method->addComment(" )");
+
     }
+
 
     function addUpdateDataMethod(ClassType $phpClass)
     {
@@ -229,13 +238,14 @@ Body;
         $method = $phpClass->addMethod('update');
         $apiUrl = str_replace(['App\\HttpController', '\\'], ['', '/'], $this->config->getBaseNamespace());
         //配置基础注释
-        $method->addComment("@api {get|post} {$apiUrl}/{$this->setRealTableName()}/update");
-        $method->addComment("@apiName update");
-        $method->addComment("@apiGroup {$apiUrl}/{$this->setRealTableName()}");
-        $method->addComment("@apiPermission {$this->config->getAuthName()}");
-        $method->addComment("@apiDescription update修改数据");
-        $this->config->getAuthSessionName() && ($method->addComment("@apiParam {String}  {$this->config->getAuthSessionName()} 权限验证token"));
-        $method->addComment("@apiParam {int} {$this->config->getPrimaryKey()} 主键id");
+
+        $method->addComment("@OA\Put(");
+        $method->addComment("path=\"{$apiUrl}/{$this->setRealTableName()}/info/{{$this->config->getPrimaryKey()}}\",");
+        $method->addComment("tags={\"{$apiUrl}/{$this->setRealTableName()}\"},");
+        $method->addComment("summary=\"更新数据\",");
+        $method->addComment("description=\"更新数据\",");
+        $this->config->getAuthSessionName() && ($method->addComment("@OA\Parameter(name=\"{$this->config->getAuthSessionName()}\",in=\"header\",description=\"TOKEN\",required=true,@OA\Schema(type=\"string\")),"));
+        $method->addComment("@OA\Parameter(name=\"{$this->config->getPrimaryKey()}\",in=\"path\",required=false,description=\"主键位ID\",@OA\Schema(type=\"integer\",format=\"int64\",default=\"0\",minimum=0)),");
         $mysqlPoolNameArr = (explode('\\', $this->config->getMysqlPoolClass()));
         $mysqlPoolName = end($mysqlPoolNameArr);
         $modelNameArr = (explode('\\', $this->config->getModelClass()));
@@ -264,7 +274,12 @@ Body;
                 $columnType = $this->convertDbTypeToDocType($column['Type']);
                 $setMethodName = "set" . Str::studly($column['Field']);
                 $getMethodName = "get" . Str::studly($column['Field']);
-                $method->addComment("@apiParam {{$columnType}} [{$column['Field']}] {$column['Comment']}");
+                if ($columnType == 'int') {
+                    $method->addComment("@OA\Parameter(name=\"{$column['Field']}\",in=\"query\",required=false,description=\"{$column['Comment']}\",@OA\Schema(type=\"integer\",format=\"int64\",default=\"0\",minimum=0)),");
+                } else {
+                    $method->addComment("@OA\Parameter(name=\"{$column['Field']}\",in=\"query\",required=false,description=\"{$column['Comment']}\",@OA\Schema(type=\"string\")),");
+                }
+
                 $methodBody .= "\$updateBean->$setMethodName(\$param['{$column['Field']}'] ?? \$bean->$getMethodName());\n";
             } else {
                 $this->config->setPrimaryKey($column['Field']);
@@ -280,12 +295,12 @@ if (\$rs) {
 }
 Body;
         $method->setBody($methodBody);
-        $method->addComment("@apiSuccess {Number} code");
-        $method->addComment("@apiSuccess {Object[]} data");
-        $method->addComment("@apiSuccess {String} msg");
-        $method->addComment("@apiSuccessExample {json} Success-Response:");
-        $method->addComment("HTTP/1.1 200 OK");
-        $method->addComment("{\"code\":200,\"data\":{},\"msg\":\"success\"}");
+
+        $method->addComment("@OA\Response(");
+        $method->addComment("     response=200,");
+        $method->addComment("     description=\"成功\",");
+        $method->addComment("   )");
+        $method->addComment(" )");
     }
 
     function addGetOneDataMethod(ClassType $phpClass)
@@ -293,13 +308,14 @@ Body;
         $method = $phpClass->addMethod('getOne');
         $apiUrl = str_replace(['App\\HttpController', '\\'], ['', '/'], $this->config->getBaseNamespace());
         //配置基础注释
-        $method->addComment("@api {get|post} {$apiUrl}/{$this->setRealTableName()}/getOne");
-        $method->addComment("@apiName getOne");
-        $method->addComment("@apiGroup {$apiUrl}/{$this->setRealTableName()}");
-        $method->addComment("@apiPermission {$this->config->getAuthName()}");
-        $method->addComment("@apiDescription 根据主键获取一条信息");
-        $this->config->getAuthSessionName() && ($method->addComment("@apiParam {String}  {$this->config->getAuthSessionName()} 权限验证token"));
-        $method->addComment("@apiParam {int} {$this->config->getPrimaryKey()} 主键id");
+
+        $method->addComment("@OA\Get(");
+        $method->addComment("path=\"{$apiUrl}/{$this->setRealTableName()}/info/{{$this->config->getPrimaryKey()}}\",");
+        $method->addComment("tags={\"{$apiUrl}/{$this->setRealTableName()}\"},");
+        $method->addComment("summary=\"根据主键获取一条信息\",");
+        $method->addComment("description=\"根据主键获取一条信息\",");
+        $this->config->getAuthSessionName() && ($method->addComment("@OA\Parameter(name=\"{$this->config->getAuthSessionName()}\",in=\"header\",description=\"TOKEN\",required=true,@OA\Schema(type=\"string\")),"));
+        $method->addComment("@OA\Parameter(name=\"{$this->config->getPrimaryKey()}\",in=\"path\",required=false,description=\"主键位ID\",@OA\Schema(type=\"integer\",format=\"int64\",default=\"0\",minimum=0)),");
         $mysqlPoolNameArr = (explode('\\', $this->config->getMysqlPoolClass()));
         $mysqlPoolName = end($mysqlPoolNameArr);
         $modelNameArr = (explode('\\', $this->config->getModelClass()));
@@ -322,12 +338,12 @@ if (\$bean) {
 }
 Body;
         $method->setBody($methodBody);
-        $method->addComment("@apiSuccess {Number} code");
-        $method->addComment("@apiSuccess {Object[]} data");
-        $method->addComment("@apiSuccess {String} msg");
-        $method->addComment("@apiSuccessExample {json} Success-Response:");
-        $method->addComment("HTTP/1.1 200 OK");
-        $method->addComment("{\"code\":200,\"data\":{},\"msg\":\"success\"}");
+
+        $method->addComment("@OA\Response(");
+        $method->addComment("     response=200,");
+        $method->addComment("     description=\"成功\",");
+        $method->addComment("   )");
+        $method->addComment(" )");
     }
 
     function addDeleteDataMethod(ClassType $phpClass)
@@ -335,13 +351,14 @@ Body;
         $method = $phpClass->addMethod('delete');
         $apiUrl = str_replace(['App\\HttpController', '\\'], ['', '/'], $this->config->getBaseNamespace());
         //配置基础注释
-        $method->addComment("@api {get|post} {$apiUrl}/{$this->setRealTableName()}/delete");
-        $method->addComment("@apiName delete");
-        $method->addComment("@apiGroup {$apiUrl}/{$this->setRealTableName()}");
-        $method->addComment("@apiPermission {$this->config->getAuthName()}");
-        $method->addComment("@apiDescription 根据主键删除一条信息");
-        $this->config->getAuthSessionName() && ($method->addComment("@apiParam {String}  {$this->config->getAuthSessionName()} 权限验证token"));
-        $method->addComment("@apiParam {int} {$this->config->getPrimaryKey()} 主键id");
+
+        $method->addComment("@OA\Delete(");
+        $method->addComment("path=\"{$apiUrl}/{$this->setRealTableName()}/info/{{$this->config->getPrimaryKey()}}\",");
+        $method->addComment("tags={\"{$apiUrl}/{$this->setRealTableName()}\"},");
+        $method->addComment("summary=\"根据主键删除一条信息\",");
+        $method->addComment("description=\"根据主键删除一条信息\",");
+        $this->config->getAuthSessionName() && ($method->addComment("@OA\Parameter(name=\"{$this->config->getAuthSessionName()}\",in=\"header\",description=\"TOKEN\",required=true,@OA\Schema(type=\"string\")),"));
+        $method->addComment("@OA\Parameter(name=\"{$this->config->getPrimaryKey()}\",in=\"path\",required=false,description=\"主键位ID\",@OA\Schema(type=\"integer\",format=\"int64\",default=\"0\",minimum=0)),");
         $mysqlPoolNameArr = (explode('\\', $this->config->getMysqlPoolClass()));
         $mysqlPoolName = end($mysqlPoolNameArr);
         $modelNameArr = (explode('\\', $this->config->getModelClass()));
@@ -367,12 +384,11 @@ if (empty(\$bean)) {
 \$this->responseDefaultJson(\$rs);
 Body;
         $method->setBody($methodBody);
-        $method->addComment("@apiSuccess {Number} code");
-        $method->addComment("@apiSuccess {Object[]} data");
-        $method->addComment("@apiSuccess {String} msg");
-        $method->addComment("@apiSuccessExample {json} Success-Response:");
-        $method->addComment("HTTP/1.1 200 OK");
-        $method->addComment("{\"code\":200,\"data\":{},\"msg\":\"success\"}");
+        $method->addComment("@OA\Response(");
+        $method->addComment("     response=200,");
+        $method->addComment("     description=\"成功\",");
+        $method->addComment("   )");
+        $method->addComment(" )");
     }
 
     function addGetAllDataMethod(ClassType $phpClass)
@@ -380,15 +396,15 @@ Body;
         $method = $phpClass->addMethod('getAll');
         $apiUrl = str_replace(['App\\HttpController', '\\'], ['', '/'], $this->config->getBaseNamespace());
         //配置基础注释
-        $method->addComment("@api {get|post} {$apiUrl}/{$this->setRealTableName()}/getAll");
-        $method->addComment("@apiName getAll");
-        $method->addComment("@apiGroup {$apiUrl}/{$this->setRealTableName()}");
-        $method->addComment("@apiPermission {$this->config->getAuthName()}");
-        $method->addComment("@apiDescription 获取一个列表");
-        $this->config->getAuthSessionName() && ($method->addComment("@apiParam {String}  {$this->config->getAuthSessionName()} 权限验证token"));
-        $method->addComment("@apiParam {String} [page=1]");
-        $method->addComment("@apiParam {String} [limit=20]");
-        $method->addComment("@apiParam {String} [keyword] 关键字,根据表的不同而不同");
+        $method->addComment("@OA\Get(");
+        $method->addComment("path=\"{$apiUrl}/{$this->setRealTableName()}/info\",");
+        $method->addComment("tags={\"{$apiUrl}/{$this->setRealTableName()}\"},");
+        $method->addComment("summary=\"获取和搜索列表\",");
+        $method->addComment("description=\"指定keyword时，为搜索内容\",");
+        $method->addComment("@OA\Parameter(name=\"page\",in=\"query\",required=false,description=\"页码\",@OA\Schema(type=\"integer\",format=\"int64\",default=\"1\",minimum=0)),");
+        $method->addComment("@OA\Parameter(name=\"pagesize\",in=\"query\",required=false,description=\"每页条数\",@OA\Schema(type=\"integer\",format=\"int64\",default=\"20\",minimum=0)),");
+        $method->addComment("@OA\Parameter(name=\"keywords\",in=\"query\",required=false,description=\"此项为不固定项，字段名为需检索的名称\",@OA\Schema(type=\"string\")),");
+        $this->config->getAuthSessionName() && ($method->addComment("@OA\Parameter(name=\"{$this->config->getAuthSessionName()}\",in=\"header\",description=\"TOKEN\",required=true,@OA\Schema(type=\"string\")),"));
         $mysqlPoolNameArr = (explode('\\', $this->config->getMysqlPoolClass()));
         $mysqlPoolName = end($mysqlPoolNameArr);
         $modelNameArr = (explode('\\', $this->config->getModelClass()));
@@ -410,12 +426,22 @@ unset(\$param['page'], \$param['limit']);
 \$this->responseJson(ReturnCode::SUCCESS, '', \$data);
 Body;
         $method->setBody($methodBody);
-        $method->addComment("@apiSuccess {Number} code");
-        $method->addComment("@apiSuccess {Object[]} data");
-        $method->addComment("@apiSuccess {String} msg");
-        $method->addComment("@apiSuccessExample {json} Success-Response:");
-        $method->addComment("HTTP/1.1 200 OK");
-        $method->addComment("{\"code\":200,\"data\":{},\"msg\":\"success\"}");
+
+
+        $method->addComment("@OA\Response(");
+        $method->addComment("     response=200,");
+        $method->addComment("     description=\"返回 TOKEN需要在其它接口带回\",");
+        $method->addComment("     @OA\JsonContent(");
+        $method->addComment("       @OA\Property(type=\"integer\",property=\"code\",example=\"1000\",description=\"返回码\"),");
+        $method->addComment("       @OA\Property(property=\"message\",type=\"string\",description=\"返回信息\"),");
+        $method->addComment("       @OA\Property(property=\"data\",type=\"array\",description=\"信息数组\",");
+        $method->addComment("         @OA\Items(");
+        $method->addComment("         type=\"object\", @OA\Property(property=\"param1\", type=\"string\",example=\"详细参数，这里省略请调试真实数据\"),");
+        $method->addComment("         ),");
+        $method->addComment("       ),");
+        $method->addComment("     ),");
+        $method->addComment("   )");
+        $method->addComment(" )");
     }
 
 
@@ -442,6 +468,7 @@ Body;
         $this->config->setRealTableName($tableName);
         return $tableName;
     }
+
     function getColumnDeaflutValue($column)
     {
 
@@ -483,7 +510,7 @@ Body;
     {
         if ($this->config->isConfirmWrite()) {
             if (file_exists($fileName . '.php')) {
-                echo "(Controller)当前路径已经存在文件,是否覆盖?(y/n)\n";
+                echo "(Controller) 当前路径已经存在文件,是否覆盖? (y/n)\n";
                 if (trim(fgets(STDIN)) == 'n') {
                     echo "已结束运行\n";
                     return false;

@@ -1,4 +1,5 @@
 <?php
+
 namespace ESGeneration\Cmd;
 
 use Symfony\Component\Console\Command\Command;
@@ -15,7 +16,7 @@ class BeanCommand extends Command
             // 命令的名称 （"php console_command" 后面的部分）
             ->setName('make:bean')
             // 运行 "php console_command list" 时的简短描述
-            ->setDescription('Create new Bean')
+            ->setDescription('生成 Bean')
             // 运行命令时使用 "--help" 选项时的完整命令描述
             ->setHelp('根据数据库表，生成 Bean文件...')
             // 配置一个参数
@@ -27,12 +28,7 @@ class BeanCommand extends Command
 
         $tableName = $input->getArgument('table_name');
         $beanConfig = new Curd();
-        try {
-            $beanConfig->makeBean($tableName);
-        } catch (Exception $e) {
-            echo $e->getMessage();
-            // die(); // 终止异常
-        }
-        exit;
+        $beanConfig->makeBean($tableName);
+        return true;
     }
 }

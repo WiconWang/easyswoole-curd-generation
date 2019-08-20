@@ -40,8 +40,9 @@ class Curd
 
             $db = \EasySwoole\MysqliPool\Mysql::defer('mysql');
             if (!$this->checkTableName($db, $tableName)) {
-                echo PHP_EOL . ">> 未检测到表" . $tableName . PHP_EOL;
-                exit;
+                echo PHP_EOL . ">> 未检测到表" . $tableName . PHP_EOL  . PHP_EOL . '按Ctrl+C结束任务';
+                return false;
+//                exit;
             }
             echo PHP_EOL . "======>>> 检测到表 [$tableName] <<<======" . PHP_EOL;
             $mysqlTable = new \AutomaticGeneration\MysqlTable($db, \EasySwoole\EasySwoole\Config::getInstance()->getConf('MYSQL.database'));
@@ -58,10 +59,9 @@ class Curd
             $beanConfig->setTableColumns($tableColumns);
             $beanBuilder = new \AutomaticGeneration\BeanBuilder($beanConfig);
             $result = $beanBuilder->generateBean();
-            echo "> 已处理：$result" . PHP_EOL;
-
-
-            exit();
+            echo "> 已处理：$result" . PHP_EOL  . PHP_EOL . '按Ctrl+C结束任务';
+            return true;
+//            exit();
         });
     }
 
@@ -75,8 +75,9 @@ class Curd
 
             $db = \EasySwoole\MysqliPool\Mysql::defer('mysql');
             if (!$this->checkTableName($db, $tableName)) {
-                echo PHP_EOL . ">> 未检测到表" . $tableName . PHP_EOL;
-                exit;
+                echo PHP_EOL . ">> 未检测到表" . $tableName . PHP_EOL . PHP_EOL . '按Ctrl+C结束任务';
+                return false;
+//                exit;
             }
             echo PHP_EOL . "======>>> 检测到表 [$tableName] <<<======" . PHP_EOL;
             $mysqlTable = new \AutomaticGeneration\MysqlTable($db, \EasySwoole\EasySwoole\Config::getInstance()->getConf('MYSQL.database'));
@@ -97,10 +98,10 @@ class Curd
             $modelBuilder = new \ESGeneration\Builder\Component\ModelBuilder($modelConfig);
 
             $result = $modelBuilder->generateModel();
-            echo "> 已处理：$result" . PHP_EOL;
+            echo "> 已处理：$result" . PHP_EOL . PHP_EOL . '按Ctrl+C结束任务';
+            return true;
 
-
-            exit();
+//            exit();
         });
     }
 
@@ -114,8 +115,9 @@ class Curd
 
             $db = \EasySwoole\MysqliPool\Mysql::defer('mysql');
             if (!$this->checkTableName($db, $tableName)) {
-                echo PHP_EOL . ">> 未检测到表" . $tableName . PHP_EOL;
-                exit;
+                echo PHP_EOL . ">> 未检测到表" . $tableName . PHP_EOL . PHP_EOL . '按Ctrl+C结束任务';
+                return false;
+//                exit;
             }
             echo PHP_EOL . "======>>> 检测到表 [$tableName] <<<======" . PHP_EOL;
             $mysqlTable = new \AutomaticGeneration\MysqlTable($db, \EasySwoole\EasySwoole\Config::getInstance()->getConf('MYSQL.database'));
@@ -144,7 +146,7 @@ class Curd
             $routerFile = ES_ROOT . '/App/HttpController/Router.php';
             $router = file_get_contents($routerFile);
             $resoureRouter = '
-            $r->addGroup(\'/' . $tableName . '\', function (RouteCollector $r) {        
+            $r->addGroup(\'/' . $controllerBuilder->setRealTableName() . '\', function (RouteCollector $r) {        
                 $r->get(\'/info\', \'' . $path . '/' . $controllerBuilder->setRealTableName() . '/getAll\');
                 $r->get(\'/info/{id:\d+}\', \'' . $path . '/' . $controllerBuilder->setRealTableName() . '/getOne\');
                 $r->post(\'/info\', \'' . $path . '/' . $controllerBuilder->setRealTableName() . '/add\');
@@ -155,10 +157,97 @@ class Curd
 
             file_put_contents($routerFile, str_replace('ROUTEAREA', 'ROUTEAREA' . $resoureRouter, $router));
 
-            echo "> 已处理：$result" . PHP_EOL;
+            echo "> 已处理：$result" . PHP_EOL . PHP_EOL . '按Ctrl+C结束任务';
+            return true;
+//            exit();
+        });
+    }
 
 
-            exit();
+
+
+
+
+
+
+
+
+
+    function makeCurd($tableName)
+    {
+        go(function () use ($tableName) {
+
+            $db = \EasySwoole\MysqliPool\Mysql::defer('mysql');
+            if (!$this->checkTableName($db, $tableName)) {
+                echo PHP_EOL . ">> 未检测到表" . $tableName . PHP_EOL  ;
+                return false;
+//                exit;
+            }
+            echo PHP_EOL . "======>>> 检测到表 [$tableName] <<<======" . PHP_EOL;
+            $mysqlTable = new \AutomaticGeneration\MysqlTable($db, \EasySwoole\EasySwoole\Config::getInstance()->getConf('MYSQL.database'));
+            $tableColumns = $mysqlTable->getColumnList($tableName);
+            $tableComment = $mysqlTable->getComment($tableName);
+
+            echo PHP_EOL . ">> 生成 Bean" . PHP_EOL;
+            $path = '';
+            $beanConfig = new \AutomaticGeneration\Config\BeanConfig();
+            $beanConfig->setBaseNamespace("App\\Bean" . $path);
+            $beanConfig->setTablePre(\EasySwoole\EasySwoole\Config::getInstance()->getConf('MYSQL.prefix'));
+            $beanConfig->setTableName($tableName);
+            $beanConfig->setTableComment($tableComment);
+            $beanConfig->setTableColumns($tableColumns);
+            $beanBuilder = new \AutomaticGeneration\BeanBuilder($beanConfig);
+            $result = $beanBuilder->generateBean();
+            echo "> 已处理：$result" . PHP_EOL  ;
+
+
+            echo PHP_EOL . PHP_EOL . ">> 生成 Model" . PHP_EOL;
+            $modelConfig = new \ESGeneration\Builder\Config\ModelConfig();
+            $modelConfig->setBaseNamespace("App\\Model" . $path);
+            $modelConfig->setTablePre("");
+            $modelConfig->setExtendClass(\App\Model\BaseModel::class);
+            $modelConfig->setTableName($tableName);
+            $modelConfig->setTableComment($tableComment);
+            $modelConfig->setTableColumns($tableColumns);
+            $modelConfig->setBeanClass($beanBuilder->getClassName());
+            $modelBuilder = new \ESGeneration\Builder\Component\ModelBuilder($modelConfig);
+
+            $result = $modelBuilder->generateModel();
+            echo "> 已处理：$result" . PHP_EOL ;
+
+
+            echo PHP_EOL . PHP_EOL . ">> 生成 Controller" . PHP_EOL;
+            $controllerConfig = new \AutomaticGeneration\Config\ControllerConfig();
+            $controllerConfig->setBaseNamespace("App\\HttpController" . $path);
+            $controllerConfig->setTablePre(\EasySwoole\EasySwoole\Config::getInstance()->getConf('MYSQL.prefix'));
+            $controllerConfig->setTableName($tableName);
+            $controllerConfig->setTableComment($tableComment);
+            $controllerConfig->setTableColumns($tableColumns);
+            $controllerConfig->setExtendClass("App\\HttpController" . $path . "\\Base");
+            $controllerConfig->setMysqlPoolClass(\EasySwoole\MysqliPool\Mysql::class);
+            $controllerConfig->setMysqlPoolName('mysql');
+            $controllerConfig->setModelClass($modelBuilder->getClassName());
+            $controllerConfig->setBeanClass($beanBuilder->getClassName());
+            $controllerBuilder = new \ESGeneration\Builder\Component\ControllerBuilder($controllerConfig);
+            $result = $controllerBuilder->generateController();
+
+            $routerFile = ES_ROOT . '/App/HttpController/Router.php';
+            $router = file_get_contents($routerFile);
+            $resoureRouter = '
+            $r->addGroup(\'/' . $controllerBuilder->setRealTableName() . '\', function (RouteCollector $r) {        
+                $r->get(\'/info\', \'' . $path . '/' . $controllerBuilder->setRealTableName() . '/getAll\');
+                $r->get(\'/info/{id:\d+}\', \'' . $path . '/' . $controllerBuilder->setRealTableName() . '/getOne\');
+                $r->post(\'/info\', \'' . $path . '/' . $controllerBuilder->setRealTableName() . '/add\');
+                $r->put(\'/info/{id:\d+}\', \'' . $path . '/' . $controllerBuilder->setRealTableName() . '/update\');
+                $r->delete(\'/info/{id:\d+}\', \'' . $path . '/' . $controllerBuilder->setRealTableName() . '/delete\');
+            });
+            ';
+
+            file_put_contents($routerFile, str_replace('ROUTEAREA', 'ROUTEAREA' . $resoureRouter, $router));
+
+            echo "> 已处理：$result" . PHP_EOL . PHP_EOL . '按Ctrl+C结束任务';
+            return true;
+//            exit();
         });
     }
 

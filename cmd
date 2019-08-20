@@ -21,6 +21,7 @@ $application->add(new ESGeneration\Cmd\InitDbCommand());
 $application->add(new ESGeneration\Cmd\ModelCommand());
 $application->add(new ESGeneration\Cmd\ControllerCommand());
 $application->add(new ESGeneration\Cmd\BeanCommand());
+$application->add(new ESGeneration\Cmd\CurdCommand());
 $application->add(new ESGeneration\Cmd\Databases\TableCommand());
 $application->add(new ESGeneration\Cmd\Databases\TableCreateCommand());
 $application->add(new ESGeneration\Cmd\Databases\TableAlterCommand());

@@ -443,7 +443,7 @@ Body;
 //        var_dump($fileName.'.php');
         if ($this->config->isConfirmWrite()) {
             if (file_exists($fileName . '.php')) {
-                echo "(Model)当前路径已经存在文件,是否覆盖?(y/n)\n";
+                echo "(Model) 当前路径已经存在文件,是否覆盖? (y/n)\n";
                 if (trim(fgets(STDIN)) == 'n') {
                     echo "已结束运行\n";
                     return false;

@@ -43,6 +43,11 @@ class InitCommand extends Command
         $beanConfig->createRoute();
         $output->writeln('路由模块生成成功！如要删除请移除 Route.php');
 
+        // 生成路由
+        $beanConfig->createApiDoc();
+        $output->writeln('接口文档模块生成成功！如要删除请移除 Swagger.php');
+
+
         // 生成工具
         $beanConfig->createUtilities();
         $output->writeln('工具模块路由生成成功！如要删除请移除 Utilities');
@@ -59,6 +64,7 @@ class InitCommand extends Command
         $init = new \AutomaticGeneration\Init();
         $init->initBaseModel();
         $init->initBaseController();
+        $beanConfig->appendBase();
         $output->writeln('Base相关文件生成成功！如要删除请移除 Model/base.php HttpController/bash.php');
     }
 }
