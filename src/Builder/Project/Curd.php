@@ -173,7 +173,7 @@ class Curd
 
 
 
-    function makeCurd($tableName)
+    function makeCurd($tableName, $path = '')
     {
         go(function () use ($tableName) {
 

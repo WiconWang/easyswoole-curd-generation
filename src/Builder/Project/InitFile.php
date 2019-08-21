@@ -191,15 +191,17 @@ class InitFile
     {
 
         $this->saveEasySwooleEvent('onRequest', '
+        // 是否允许全部IP
+        $allow_all = false;
+        // 是否允许特定IP
         $allow_origin = array(
-            \'*\',
-            // \'http://192.168.1.111\',
+            \'http://api.hinews.net.cn\',
         );
         $origin = $request->getHeader(\'origin\');
-        if ($origin !== []){
-            $origin = $origin[0];
-            if(in_array($origin, $allow_origin)){
-                $response->withHeader(\'Access-Control-Allow-Origin\', $origin);
+        if ($origin !== []) {
+            $origin_user = $allow_all ? \'*\' : $origin[0];
+            if ($allow_all || in_array($origin_user, $allow_origin)) {
+                $response->withHeader(\'Access-Control-Allow-Origin\', $origin_user);
                 $response->withHeader(\'Access-Control-Allow-Methods\', \'GET, POST, OPTIONS, DELETE, PUT, PATCH\');
                 $response->withHeader(\'Access-Control-Allow-Credentials\', \'true\');
                 $response->withHeader(\'Access-Control-Allow-Headers\', \'Content-Type, Authorization, X-Requested-With, token\');
@@ -209,6 +211,8 @@ class InitFile
                 }
             }
         }
+        // 重写掉Server防止暴露服务器敏感信息
+        $response->withHeader(\'Server\', \'WiconServer\');
         ');
 
         return true;
