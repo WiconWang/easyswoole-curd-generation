@@ -33,7 +33,7 @@ class InitCommand extends Command
         $beanConfig = new InitFile();
 
         $output->writeln('!! 注意本操作会覆盖已有项目文件，仅用于空白项目进行初始架构！');
-        $output->writeln("(INIT) 是否执行本操作? (y/n) 默认 y \n");
+        $output->writeln("!! 是否执行本操作? (y/n) 默认 y \n");
         if (trim(fgets(STDIN)) == 'n') {
             echo "- 已终止\n";
             return false;
@@ -43,9 +43,9 @@ class InitCommand extends Command
         $beanConfig->createRoute();
         $output->writeln('路由模块生成成功！如要删除请移除 Route.php');
 
-        // 生成路由
+        // 生成接口文档
         $beanConfig->createApiDoc();
-        $output->writeln('接口文档模块生成成功！如要删除请移除 Swagger.php');
+        $output->writeln('接口文档模块生成成功！请在 Swagger.php 中配置域名，如要删除请移除此文档');
 
 
         // 生成工具
@@ -58,13 +58,13 @@ class InitCommand extends Command
 
         // 生成异常
         $beanConfig->createExceptions();
-        $output->writeln('异常模块生成成功！如要删除请移除 Exception 文件夹和EasySwooleEvent.php中相关代码');
+        $output->writeln('异常模块生成成功！如要删除请移除 Exception 文件夹和 EasySwooleEvent.php 中相关代码');
 
         // 生成核心base
         $init = new \AutomaticGeneration\Init();
         $init->initBaseModel();
         $init->initBaseController();
         $beanConfig->appendBase();
-        $output->writeln('Base相关文件生成成功！如要删除请移除 Model/base.php HttpController/bash.php');
+        $output->writeln('Base相关文件生成成功！如要删除请移除 Model和HttpController下的 base.php');
     }
 }

@@ -45,7 +45,7 @@ class InitDbCommand extends Command
         $beanConfig = new InitFile();
         $output->writeln('!! 数据库模块涉及多处系统文件，有失败可能！');
         $output->writeln('!! 如要删除请移除 EasySwooleEvent\dev\produce 中相关代码');
-        $output->writeln("(INIT) 是否执行本操作? (y/n) 默认 y \n");
+        $output->writeln("!! 是否执行本操作? (y/n) 默认 y \n");
         if (trim(fgets(STDIN)) == 'n') {
             echo "- 已终止\n";
             return false;
@@ -62,7 +62,7 @@ class InitDbCommand extends Command
         $output->writeln('全站JSON响应模块 生成成功！');
 
         $beanConfig->createOrigin();
-        $output->writeln('跨域模块 生成成功！');
+        $output->writeln('跨域模块 生成成功！请在 EasySwooleEvent.php 中配置');
 
 
     }
