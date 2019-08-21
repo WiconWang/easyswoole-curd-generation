@@ -45,7 +45,7 @@ class InitCommand extends Command
 
         // 生成接口文档
         $beanConfig->createApiDoc();
-        $output->writeln('接口文档模块生成成功！请在 Swagger.php 中配置域名，如要删除请移除此文档');
+        $output->writeln('接口文档模块生成成功！在 Swagger.php 中配置域名后可用swagger客户端访问接口文档，删除请移除此文档');
 
 
         // 生成工具
