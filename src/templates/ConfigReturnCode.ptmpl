@@ -93,7 +93,7 @@ class ReturnCode
 
 
     ////////
-    protected const MESSAGE = [
+    public const MESSAGE = [
         0    => "成功",
         //HTTP 类返回码
         1000 => "请求出现错误",

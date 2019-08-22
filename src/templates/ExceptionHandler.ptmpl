@@ -21,7 +21,7 @@ class ExceptionHandler
         if ($exception->getMessage() == 'swoole exit') $code = ReturnCode::ERROR;
         if (!$response->isEndResponse()) {
             $data = Array(
-                "code"   => $code,
+                "code"   => $code > 0 ? $code : ReturnCode::ERROR,
                 "result" => array(
                     'file'   => $exception->getFile(),
                     'line'   => $exception->getLine(),

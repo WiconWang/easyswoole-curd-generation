@@ -36,6 +36,7 @@ class Router extends AbstractRouter
 
         // 研发文档
         $r->get('/Swagger/getJson', '/Swagger/getJson');
+        $r->get('/Swagger/getReturnCode', '/Swagger/getReturnCode');
 
 // 下一行标记会在命令生成时使用，请不要删除
 // ROUTEAREA

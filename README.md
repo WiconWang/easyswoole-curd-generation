@@ -19,21 +19,20 @@
     ```
 
 2. 安装主程序  
-    目前本项目仅发布 dev 版，请在 composer.json 中，添加以下代码，以便可以使用本项目
+    目前本项目需要指定项目目录，请在 composer.json 中，添加以下代码，以便可以使用本项目
     ```
     "autoload": {
         "psr-4": {
             "App\\": "App/"
         }
     },
-    "minimum-stability": "dev",
     ```  
     执行以下命令：
     ```
     composer require wiconwang/easyswoole-generation
     php vendor/bin/cmd install
     ```
-执行后，会在根目录生成 `cmd` 文件    
+执行后，会在根目录生成 `cmd` 文件。    
 如未成功生成，请到 `vendor/wiconwang/easyswoole-generation` 下，将 `cmd` 文件复制到项目根目录以便后期使用。
 
 
@@ -44,5 +43,9 @@
 ``` 
 php cmd init:framework
 php cmd init:database
-
 ```
+
+## 研发文档
+系统会自动生成研发文档，路径为 `/Swagger/getJson`    
+可自行下载 [`swagger-ui`](https://swagger.io/tools/swagger-ui/download/) 来加载此地址。   
+返回码接口路径为 `/Swagger/getReturnCode` ，可对接并显示所有返回码。
