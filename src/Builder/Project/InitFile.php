@@ -195,7 +195,7 @@ class InitFile
         $allow_all = false;
         // 是否允许特定IP
         $allow_origin = array(
-            \'http://api.hinews.net.cn\',
+            \'http://xxx.net.cn\',
         );
         $origin = $request->getHeader(\'origin\');
         if ($origin !== []) {
