@@ -88,7 +88,7 @@ class Curd
             echo PHP_EOL . PHP_EOL . ">> 生成 Model" . PHP_EOL;
             $modelConfig = new \ESGeneration\Builder\Config\ModelConfig();
             $modelConfig->setBaseNamespace("App\\Model" . $path);
-            $modelConfig->setTablePre("");
+            $modelConfig->setTablePre(\EasySwoole\EasySwoole\Config::getInstance()->getConf('MYSQL.prefix'));
             $modelConfig->setExtendClass(\App\Model\BaseModel::class);
             $modelConfig->setTableName($tableName);
             $modelConfig->setTableComment($tableComment);
@@ -204,7 +204,7 @@ class Curd
             echo PHP_EOL . PHP_EOL . ">> 生成 Model" . PHP_EOL;
             $modelConfig = new \ESGeneration\Builder\Config\ModelConfig();
             $modelConfig->setBaseNamespace("App\\Model" . $path);
-            $modelConfig->setTablePre("");
+            $modelConfig->setTablePre(\EasySwoole\EasySwoole\Config::getInstance()->getConf('MYSQL.prefix'));
             $modelConfig->setExtendClass(\App\Model\BaseModel::class);
             $modelConfig->setTableName($tableName);
             $modelConfig->setTableComment($tableComment);
