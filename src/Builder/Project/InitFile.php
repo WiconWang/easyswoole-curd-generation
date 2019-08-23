@@ -136,7 +136,7 @@ class InitFile
         $this->saveEasySwooleEvent('mainServerCreate', '
         $configData = Config::getInstance()->getConf(\'REDIS\');
         $config = new \EasySwoole\RedisPool\Config($configData);
-        $config->setOptions([\'serialize\'=>true]);
+        $config->setOptions([\'serialize\' => false, \'compatibility_mode\' => true]);
         try {
             $poolConf = \EasySwoole\RedisPool\Redis::getInstance()->register(\'redis\', $config);
             $poolConf->setMaxObjectNum($configData[\'maxObjectNum\']);
