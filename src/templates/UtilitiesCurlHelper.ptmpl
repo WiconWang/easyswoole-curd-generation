@@ -49,6 +49,16 @@ class CurlHelper
         if ($method == 'post') {
             curl_setopt($ch, CURLOPT_POST, true);
         }
+        if($method == 'patch'){
+            curl_setopt ($ch, CURLOPT_CUSTOMREQUEST, "PATCH");
+        }
+        if($method == 'put'){
+            curl_setopt ($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+        }
+        if($method == 'delete'){
+            curl_setopt ($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+        }
+
         if (count($content)) {
             curl_setopt($ch, CURLOPT_POSTFIELDS, $content);
         }
@@ -58,11 +68,18 @@ class CurlHelper
         curl_setopt($ch, CURLOPT_HEADER, $backHeader); // 显示返回的Header区域内容
         $response = curl_exec($ch);
         if ($error = curl_error($ch)) {
-//            die($error);
-            return $error;
+        // die($error);
+            return [
+                'error' => 1,
+                'message' => $error
+            ];
         }
         curl_close($ch);
-        return $response;
+        return [
+            'error' => 0,
+            'message' => $response
+        ];
+        // return $response;
 
     }
 }

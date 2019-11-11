@@ -61,10 +61,11 @@ class InitCommand extends Command
         $output->writeln('异常模块生成成功！如要删除请移除 Exception 文件夹和 EasySwooleEvent.php 中相关代码');
 
         // 生成核心base
-        $init = new \AutomaticGeneration\Init();
-        $init->initBaseModel();
-        $init->initBaseController();
-        $beanConfig->appendBase();
+//        $init = new \AutomaticGeneration\Init();
+//        $init->initBaseModel();
+//        $init->initBaseController();
+//        $beanConfig->appendBase();
+        $beanConfig->createBase();
         $output->writeln('Base相关文件生成成功！如要删除请移除 Model和HttpController下的 base.php');
     }
 }

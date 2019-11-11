@@ -111,7 +111,7 @@ class InitFile
         \'password\'             => \'password\',//数据库密码
         \'database\'             => \'project\',//数据库
         \'port\'                 => \'3306\',//端口
-        \'prefix\'                 => \'\',//前缀
+        \'prefix\'               => \'\',//前缀
         \'timeout\'              => \'30\',//超时时间
         \'connect_timeout\'      => \'5\',//连接超时时间
         \'charset\'              => \'utf8mb4\',//字符编码
@@ -192,7 +192,7 @@ class InitFile
 
         $this->saveEasySwooleEvent('onRequest', '
         // 是否允许全部IP
-        $allow_all = false;
+        $allow_all = true;
         // 是否允许特定IP
         $allow_origin = array(
             \'http://xxx.net.cn\',
@@ -224,19 +224,26 @@ class InitFile
      * 全站 JSON 影响
      * @return bool
      */
-    public function appendBase()
-    {
-        $content = file_get_contents(ES_ROOT . '/App/HttpController/Base.php');
-        $content = str_replace('public function index()','
-        use \App\Utilities\ResponseHelper;
-        public function index()
-        ',$content);
-
-        file_put_contents(ES_ROOT . '/App/HttpController/Base.php',$content);
-
-    }
+//    public function appendBase()
+//    {
+//        $content = file_get_contents(ES_ROOT . '/App/HttpController/Base.php');
+//        $content = str_replace('public function index()','
+//        use \App\Utilities\ResponseHelper;
+//        public function index()
+//        ',$content);
+//
+//        file_put_contents(ES_ROOT . '/App/HttpController/Base.php',$content);
+//
+//    }
     //
-
+    public function createBase()
+    {
+        $this->createBaseDirectory('App//HttpController');
+        $this->createPHPDocument('/App/HttpController/BaseController', $this->getPHPDocument('/templates/BaseController'));
+        $this->createBaseDirectory('App//Model');
+        $this->createPHPDocument('/App/Model/BaseModel', $this->getPHPDocument('/templates/BaseModel'));
+        return true;
+    }
 
     // 取内容
     protected function getPHPDocument($filePath)

@@ -8,6 +8,7 @@
 namespace App\Utilities;
 
 use App\Config\ReturnCode;
+use EasySwoole\Http\Response;
 
 
 trait ResponseHelper
@@ -36,5 +37,15 @@ trait ResponseHelper
     public function responseJson($ReturnCode, $msg = '', $data = [])
     {
         $this->writeJson($ReturnCode,$data, empty($msg) ? ReturnCode::getMessage($ReturnCode) : $msg);
+    }
+
+
+    public function responseFile($ContentType, $content = null,Response $response)
+    {
+        $response->write($content);
+        $response->withHeader('Content-type', $ContentType);
+        $response->withStatus(200);
+        return true;
+
     }
 }
